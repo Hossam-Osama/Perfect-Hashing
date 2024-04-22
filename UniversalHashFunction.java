@@ -7,7 +7,6 @@ class UniversalHashFunction {
     private static final int numberOfBits = 33;
 
 
-
     public int[][] initRandomHash(int rows) {
 
         int[][] hashMatrix = new int[rows][numberOfBits];

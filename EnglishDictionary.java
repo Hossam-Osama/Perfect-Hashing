@@ -22,9 +22,9 @@ class EnglishDictionary {
         } else {
             System.out.println("Word already exists: " + word);
         }
-        for(List s: perfectHashTable.table){
-            if(s!=null){
-                System.out.print(s+"  ");
+        for (List s : perfectHashTable.table) {
+            if (s != null) {
+                System.out.print(s + "  ");
             }
         }
         System.out.println(Arrays.deepToString(perfectHashTable.table));
@@ -49,32 +49,24 @@ class EnglishDictionary {
     }
 
     public void batchInsert(String filePath) {
-        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
-            String line;
-            int count = 0;
-            while ((line = reader.readLine()) != null) {
-                if (perfectHashTable.insert(line)) {
-                    count++;
-                }
-            }
-            System.out.println("Batch insert completed. " + count + " words inserted.");
-        } catch (IOException e) {
-            System.out.println("Error reading file: " + e.getMessage());
-        }
+        perfectHashTable.batchInsert(filePath);
+        System.out.println(Arrays.deepToString(perfectHashTable.table));
     }
 
     public void batchDelete(String filePath) {
-        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
-            String line;
-            int count = 0;
-            while ((line = reader.readLine()) != null) {
-                if (perfectHashTable.delete(line)) {
-                    count++;
-                }
-            }
-            System.out.println("Batch delete completed. " + count + " words deleted.");
-        } catch (IOException e) {
-            System.out.println("Error reading file: " + e.getMessage());
-        }
+        perfectHashTable.batchDelete(filePath);
+        System.out.println(Arrays.deepToString(perfectHashTable.table));
+//        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+//            String line;
+//            int count = 0;
+//            while ((line = reader.readLine()) != null) {
+//                if (perfectHashTable.delete(line)) {
+//                    count++;
+//                }
+//            }
+//            System.out.println("Batch delete completed. " + count + " words deleted.");
+//        } catch (IOException e) {
+//            System.out.println("Error reading file: " + e.getMessage());
+//        }
     }
 }
