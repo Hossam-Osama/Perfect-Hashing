@@ -1,4 +1,3 @@
-
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -10,60 +9,81 @@ public class QuadraticPerfectHashTable {
     private UniversalHashFunction hashFunction;
     public List<String>[] table;
 
-    ArrayList<int[][]> hashTables = new ArrayList<>();
+    int[][] hashTables;
     String[] dictionary;
     int sizeOfTable;
+    int setLength;
 
     int count;
     boolean maxCollision = false;
     int row;
 
+    int loadFactor;
+
 
     public QuadraticPerfectHashTable(int setSize, String[] dic) {
         sizeOfTable = setSize * setSize;
+        setLength = setSize;
         dictionary = dic;
         hashFunction = new UniversalHashFunction();
         table = new ArrayList[sizeOfTable];
 
         row = (int) (Math.log(sizeOfTable) / Math.log(2)) + 1;
-        hashTables.add(hashFunction.initRandomHash(row));
+        hashTables = hashFunction.initRandomHash(row);
         count = 0;
 
     }
 
-//    private void initializeTable(int setSize) {
-//        for (int i = 0; i < setSize; i++) {
-//            String element = dictionary[i];
-//            int hashValue = hashFunction.hash(element);
-//
-//            if (table[hashValue] == null) {
-//                table[hashValue] = new ArrayList<>();
-//            } else if (table[hashValue].contains(element)) {
-//                count++;
-//                System.out.println(element);
-//            } else {
-//                // Collision occurred, try a new hash function
-//                n = true;
-//                count = 0;
-//                hashFunction = new UniversalHashFunction(table.length);
-//                for (int m = 0; m < table.length; m++) {
-//                    table[m] = null;
-//                }
-//                initializeTable(setSize); // Recursive call to reinitialize the table
-//                return;
-//            }
-//            table[hashValue].add(element);
-//        }
-//    }
+    private void initializeTable(String key) {
 
-    public boolean insert(String key, int numberOfCollison) {
+        try {
+            List<String>[] newTable;
+            System.out.println(" count is" + count + "   length" + setLength);
+            if (count > setLength) {
+                sizeOfTable = count * count;
+                setLength = count;
+                newTable = new List[sizeOfTable];
+            } else {
+                newTable = new List[sizeOfTable];
+            }
 
-        if (numberOfCollison > 10) {
-            System.out.println("thats many hashs that enough" + maxCollision);
-            return false;
+
+            row = (int) (Math.log(sizeOfTable) / Math.log(2)) + 1;
+            hashTables = hashFunction.initRandomHash(row);
+
+            for (int i = 0; i < table.length; i++) {
+                if (table[i] != null) {
+                    int index = hashFunction.generateHash(table[i].get(0), hashTables, sizeOfTable);
+                    System.out.println("the index is " + index);
+                    if (newTable[index] != null) {
+                        System.out.println(" collision ");
+                        initializeTable(key);
+                        return;
+                    }
+                    System.out.print(" " + table[i].get(0) + " ");
+                    newTable[index] = new ArrayList<>();
+                    newTable[index].add(table[i].get(0));
+                }
+            }
+            int index = hashFunction.generateHash(key, hashTables, sizeOfTable);
+            if (newTable[index] != null) {
+                System.out.println(" collision ");
+                initializeTable(key);
+                return;
+            }
+            newTable[index] = new ArrayList<>();
+            newTable[index].add(key);
+            table = new List[sizeOfTable];
+            table = newTable;
+        } catch (Exception e) {
+            System.out.println(e);
         }
+    }
 
-        int index = hashFunction.generateHash(key, hashTables.get(numberOfCollison), sizeOfTable);
+    public boolean insert(String key) {
+
+        count++;
+        int index = hashFunction.generateHash(key, hashTables, sizeOfTable);
         List<String> bin = table[index];
         if (bin == null) {
             bin = new ArrayList<>();
@@ -76,12 +96,7 @@ public class QuadraticPerfectHashTable {
                 return false;
             } else {
                 System.out.println("there is collision");
-                hashTables.add(hashFunction.initRandomHash(row));
-                if (insert(key, numberOfCollison + 1)) {
-                    return true;
-                } else {
-                    return false;
-                }
+                initializeTable(key);
             }
         }
 
@@ -89,55 +104,43 @@ public class QuadraticPerfectHashTable {
         return true;
     }
 
-    public boolean delete(String key, int numberOfCollison) {
-        if (numberOfCollison > 10) {
-            System.out.println("thats many hashs that enough");
-            return false;
-        }
+    public boolean delete(String key) {
 
-        int index = hashFunction.generateHash(key, hashTables.get(numberOfCollison), sizeOfTable);
+
+        int index = hashFunction.generateHash(key, hashTables, sizeOfTable);
         List<String> bin = table[index];
         if (bin == null) {
-            bin = new ArrayList<>();
-            table[index] = bin;
+            System.out.println(" it is not found ");
         } else {
             if (bin.get(0).equals(key)) {
                 System.out.println(" it is  exist");
                 table[index] = null;
                 return true;
             } else {
-                if (insert(key, numberOfCollison++)) {
-                    return true;
-                } else {
-                    return false;
-                }
+                System.out.println(" it is not found ");
+                return false;
             }
         }
 
         return false;
     }
 
-    public boolean search(String key, int numberOfCollison) {
-        if (numberOfCollison > 10) {
-            System.out.println("thats many hashs that enough");
-            return false;
-        }
+    public boolean search(String key) {
+        count++;
 
-        int index = hashFunction.generateHash(key, hashTables.get(numberOfCollison), sizeOfTable);
+
+        int index = hashFunction.generateHash(key, hashTables, sizeOfTable);
         List<String> bin = table[index];
         if (bin == null) {
-            bin = new ArrayList<>();
-            table[index] = bin;
+            System.out.println(" it is not found ");
+
         } else {
             if (bin.get(0).equals(key)) {
                 System.out.println(" it is  exist");
                 return true;
             } else {
-                if (insert(key, numberOfCollison++)) {
-                    return true;
-                } else {
-                    return false;
-                }
+                System.out.println(" it is not found ");
+                return false;
             }
         }
 
@@ -153,7 +156,7 @@ public class QuadraticPerfectHashTable {
 
             while ((line = reader.readLine()) != null) {
                 String key = line.trim();
-                if (insert(key, 0)) {
+                if (insert(key)) {
                     insertedCount++;
                 } else {
                     alreadyExistsCount++;
@@ -176,7 +179,7 @@ public class QuadraticPerfectHashTable {
 
             while ((line = reader.readLine()) != null) {
                 String key = line.trim();
-                if (delete(key, 0)) {
+                if (delete(key)) {
                     deletedCount++;
                 } else {
                     nonExistingCount++;

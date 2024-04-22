@@ -2,6 +2,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 
 class EnglishDictionary {
     private final QuadraticPerfectHashTable perfectHashTable;
@@ -9,23 +10,28 @@ class EnglishDictionary {
     public EnglishDictionary(String backendType) {
         // Initialize the dictionary based on the backend type
         if (backendType.equals("QuadraticPerfectHashTable")) {
-            perfectHashTable = new QuadraticPerfectHashTable(3, new String[0]);
+            perfectHashTable = new QuadraticPerfectHashTable(2, new String[0]);
         } else {
             throw new IllegalArgumentException("Invalid backend type");
         }
     }
 
     public void insert(String word) {
-        if (perfectHashTable.insert(word,0)) {
+        if (perfectHashTable.insert(word)) {
             System.out.println("Word inserted successfully: " + word);
         } else {
             System.out.println("Word already exists: " + word);
+        }
+        for(List s: perfectHashTable.table){
+            if(s!=null){
+                System.out.print(s+"  ");
+            }
         }
         System.out.println(Arrays.deepToString(perfectHashTable.table));
     }
 
     public void delete(String word) {
-        if (perfectHashTable.delete(word,0)) {
+        if (perfectHashTable.delete(word)) {
             System.out.println("Word deleted successfully: " + word);
         } else {
             System.out.println("Word not found: " + word);
@@ -33,7 +39,7 @@ class EnglishDictionary {
     }
 
     public boolean search(String word) {
-        if (perfectHashTable.search(word,0)) {
+        if (perfectHashTable.search(word)) {
             System.out.println("Word found: " + word);
             return true;
         } else {
@@ -47,7 +53,7 @@ class EnglishDictionary {
             String line;
             int count = 0;
             while ((line = reader.readLine()) != null) {
-                if (perfectHashTable.insert(line,0)) {
+                if (perfectHashTable.insert(line)) {
                     count++;
                 }
             }
@@ -62,7 +68,7 @@ class EnglishDictionary {
             String line;
             int count = 0;
             while ((line = reader.readLine()) != null) {
-                if (perfectHashTable.delete(line,0)) {
+                if (perfectHashTable.delete(line)) {
                     count++;
                 }
             }

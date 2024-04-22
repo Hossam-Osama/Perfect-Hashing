@@ -1,9 +1,4 @@
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.Arrays;
 import java.util.Scanner;
-
 
 
 class Main {
@@ -24,10 +19,15 @@ class Main {
             System.out.println("4. Batch insert from file");
             System.out.println("5. Batch delete from file");
             System.out.println("0. Exit");
-
-            System.out.print("Enter your choice: ");
-            int choice = scanner.nextInt();
-            scanner.nextLine(); // Consume the newline character
+            int choice;
+            try {
+                scanner.nextLine();
+                System.out.print("Enter your choice: ");
+                choice = scanner.nextInt();
+                scanner.nextLine(); // Consume the newline character
+            } catch (Exception e) {
+                continue;
+            }
 
             switch (choice) {
                 case 1:

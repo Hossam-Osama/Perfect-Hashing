@@ -22,8 +22,8 @@ class UniversalHashFunction {
         }
 
         // Print the randomly generated binary array
-        System.out.println("Randomly generated binary array:");
-        System.out.println(hashMatrix.toString());
+//        System.out.println("Randomly generated binary array:");
+//        System.out.println(hashMatrix.toString());
 
         return hashMatrix;
 
@@ -56,7 +56,7 @@ class UniversalHashFunction {
             binary[i] = binary[i] % 2;
         }
         int index = binaryToDecimal(binary);
-        System.out.println(index);
+//        System.out.println(index);
         return index%sizeOfTable;
 
     }
