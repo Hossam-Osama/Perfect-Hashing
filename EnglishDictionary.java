@@ -5,13 +5,17 @@ import java.util.Arrays;
 import java.util.List;
 
 class EnglishDictionary {
-    private final QuadraticPerfectHashTable perfectHashTable;
+    private final IPerfectHashTable perfectHashTable;
 
     public EnglishDictionary(String backendType) {
         // Initialize the dictionary based on the backend type
         if (backendType.equals("QuadraticPerfectHashTable")) {
             perfectHashTable = new QuadraticPerfectHashTable(2, new String[0]);
-        } else {
+        }else if(backendType.equals("LinearPerfectHashTable")) 
+        {
+            perfectHashTable=new LinearPerfectHashing(2,  new String[0]);
+        }
+        else {
             throw new IllegalArgumentException("Invalid backend type");
         }
     }
@@ -22,12 +26,12 @@ class EnglishDictionary {
         } else {
             System.out.println("Word already exists: " + word);
         }
-        for (List s : perfectHashTable.table) {
-            if (s != null) {
-                System.out.print(s + "  ");
-            }
-        }
-        System.out.println(Arrays.deepToString(perfectHashTable.table));
+        // for (List s : perfectHashTable.table) {
+        //     if (s != null) {
+        //         System.out.print(s + "  ");
+        //     }
+        // }
+        // System.out.println(Arrays.deepToString(perfectHashTable.table));
     }
 
     public void delete(String word) {
@@ -50,12 +54,12 @@ class EnglishDictionary {
 
     public void batchInsert(String filePath) {
         perfectHashTable.batchInsert(filePath);
-        System.out.println(Arrays.deepToString(perfectHashTable.table));
+        // System.out.println(Arrays.deepToString(perfectHashTable.table));
     }
 
     public void batchDelete(String filePath) {
         perfectHashTable.batchDelete(filePath);
-        System.out.println(Arrays.deepToString(perfectHashTable.table));
+        // System.out.println(Arrays.deepToString(perfectHashTable.table));
 //        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
 //            String line;
 //            int count = 0;
