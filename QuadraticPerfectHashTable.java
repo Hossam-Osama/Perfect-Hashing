@@ -6,7 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 
 
-public class QuadraticPerfectHashTable {
+public class QuadraticPerfectHashTable implements IPerfectHashTable {
     private UniversalHashFunction hashFunction;
     public List<String>[] table;
 
@@ -184,7 +184,7 @@ public class QuadraticPerfectHashTable {
                 count++;
             }
             initializeTable(keys);
-            System.out.println("Batch insert completed. " + count + " words inserted.");
+            System.out.println("Batch insert completed. " +( count - inserted)+ " words inserted.");
         } catch (IOException e) {
             System.out.println("Error reading file: " + e.getMessage());
         }
@@ -209,6 +209,35 @@ public class QuadraticPerfectHashTable {
         } catch (IOException e) {
             System.out.println("Error reading file: " + e.getMessage());
         }
+    }
+    public int getTotalInserted()
+    {
+        
+    return totalInserted;
+    }
+    public int getTotalDeleted()
+    {
+        
+
+        return totalDeleted;
+    }
+    public int getFailedDeleted()
+    {return failedDeleted;
+    }
+    public int getfailedInserted()
+    {
+        
+
+        return failedInserted;
+    }
+    public int getnumberOfResh()
+    {
+        
+     return numberOfResh;
+    }
+    public int getnumberOfelement()
+    {     
+     return count;
     }
 
 }
